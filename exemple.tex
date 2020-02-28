@@ -1,0 +1,91 @@
+\documentclass[10pt]{letter}
+\usepackage[fullwidth]{charteunil}
+
+% Following is for demonstration only
+\newif\ifshowmarks
+\ifshowmarks
+\AddToShipoutPicture*{%
+  \color{gray}%
+  \AtPageUpperLeft{%
+    \put(18mm,-11mm){\vector(1,0){4cm}}%
+    \put(58mm,-11mm){\vector(-1,0){4cm}}%
+    \put(18mm,-11mm){\makebox(4cm,\baselineskip)[c]{4cm}}%
+
+    \put(18mm,-11mm){\line(0,-1){14mm}}%
+    \put(0,-.07\paperheight){\vector(1,0){18mm}}%
+    \put(18mm,-.07\paperheight){\vector(-1,0){18mm}}%
+    \put(0,-.07\paperheight){\makebox(18mm,\baselineskip)[c]{18mm}}%
+    
+    \multiput(28mm,0)(0,-.01\paperheight){100}{\line(0,-1){.005\paperheight}}%
+    \put(0,-.5\paperheight){\vector(1,0){28mm}}%
+    \put(28mm,-.5\paperheight){\vector(-1,0){28mm}}%
+    \put(0,-.5\paperheight){\makebox(28mm,\baselineskip)[c]{28mm}}%
+    
+    \multiput(0,-11mm)(.01\paperwidth,0){100}{\line(1,0){.005\paperwidth}}%
+    \put(.5\paperwidth,0){\vector(0,-1){11mm}}%
+    \put(.5\paperwidth,-11mm){\vector(0,1){11mm}}%
+    \put(.5\paperwidth,-11mm){\makebox(0,11mm)[l]{ 11mm}}%
+    
+    %address at x=12.5cm
+    \put(124mm,-42.5mm){\line(0,-1){20mm}}%
+    \put(0,-52.5mm){\vector(1,0){124mm}}%
+    \put(124mm,-52.5mm){\vector(-1,0){124mm}}%
+    \put(0,-52.5mm){\makebox(124mm,\baselineskip)[c]{12,5cm}}%
+    
+    %address at y=42.5cm
+    \put(125mm,-41.5mm){\line(1,0){45mm}}%
+    \put(150mm,0){\vector(0,-1){41.5mm}}%
+    \put(150mm,-41.5mm){\vector(0,1){41.5mm}}%
+    \put(150mm,-41.5mm){\makebox(0,41.5mm)[l]{ 4,25cm}}%
+    
+    %date at y=91mm
+    \put(125mm,-90mm){\line(1,0){60mm}}%
+    \put(180mm,0){\vector(0,-1){90mm}}%
+    \put(180mm,-90mm){\vector(0,1){90mm}}%
+    \put(180mm,-90mm){\makebox(0,90mm)[l]{ 9,1cm}}%
+    
+    %subject at y=112mm
+    \put(28mm,-112mm){\line(1,0){60mm}}%
+    \put(45mm,0){\vector(0,-1){112mm}}%
+    \put(45mm,-112mm){\vector(0,1){112mm}}%
+    \put(45mm,-112mm){\makebox(0,80mm)[l]{ 112mm}}%
+    
+    \put(\paperwidth,0){%
+      \multiput(-15mm,0)(0,-.01\paperheight){100}{\line(0,-1){.005\paperheight}}%
+      \put(-15mm,-.333\paperheight){\vector(1,0){15mm}}%
+      \put(0,-.333\paperheight){\vector(-1,0){15mm}}%
+      \put(-15mm,-.333\paperheight){\makebox(15mm,\baselineskip)[c]{15mm}}%
+    }%
+  }%
+  \AtPageLowerLeft{%
+    \multiput(0,10mm)(.01\paperwidth,0){100}{\line(1,0){.005\paperwidth}}%
+    \put(.5\paperwidth,0){\vector(0,1){10mm}}%
+    \put(.5\paperwidth,10mm){\vector(0,-1){10mm}}%
+    \put(.5\paperwidth,0){\makebox(0,10mm)[l]{ 10mm}}%
+  }%
+}
+\fi
+
+\date{Lausanne, le 19 février 2020}
+\fromdept{Centre informatique}
+\maxidentitylength{4.5cm}
+\superdept{Direction}
+\contactline{Tél. +41 (0)21 692 2211 | www.unil.ch/ci | helpdesk@unil.ch}
+\fromaddress{Centre informatique \\ bâtiment Amphimax \\ CH-1015 Lausanne}
+\toaddress{Monsieur \\ Perceval Faramaz \\ Le Pré des Buis 39 \\ 1315 La Sarraz}
+
+\begin{document}
+\subject{Concerne: commodo consequat}
+Monsieur,
+
+Vous pouvez, si vous le souhaitez, écrire une introduction à votre journal en remplaçant ce texte par le vôtre. Sinon, supprimez-le. Si vous avez une photo disponible sur votre ordinateur, vous pouvez l'insérer dans l'encadré ci-dessus ou remplacer cet encadré par une des images disponibles dans la bibliothèque. Pour cela, cliquez dessus et pressez la touche SUPPR. Choisissez Image dans le menu Insertion, puis sélectionnez \textbf{"À partir d'un fichier... "} ou "Images de la bibliothèque". Choisissez l'image qui vous intéresse. 
+Vous pouvez, si vous le souhaitez, écrire une introduction à votre journal en remplaçant ce texte par le vôtre. Sinon, supprimez-le. Si vous avez une photo disponible sur votre ordinateur, vous pouvez l'insérer dans l'encadré ci-dessus ou remplacer cet encadré par une des images disponibles dans la bibliothèque. Pour cela, cliquez dessus et pressez la touche SUPPR. Choisissez Image dans le menu Insertion, puis sélectionnez "À partir d'un fichier... " ou "Images de la bibliothèque". Choisissez l'image qui vous intéresse.
+Vous pouvez, si vous le souhaitez, écrire une introduction à votre journal en remplaçant ce texte par le vôtre. Sinon, supprimez-le. Sinon, supprimez-le.
+
+Si vous avez une photo disponible sur votre ordinateur.Vous pouvez, si vous le souhaitez, écrire une introduction à votre journal en remplaçant ce texte par le vôtre. Sinon, supprimez-le. Si vous avez une photo disponible sur votre ordinateur, vous pouvez l'insérer dans l'encadré ci-dessus ou remplacer cet encadré par une des images disponibles dans la bibliothèque. Pour cela, cliquez dessus et pressez la touche SUPPR\footnote{supprimer}. Choisissez Image dans le menu Insertion, puis sélectionnez "À partir d'un fichier... " ou "Images de la bibliothèque". Choisissez l'image qui vous intéresse.
+
+Atchoum!
+\signature{Lukas Baumgartner}
+%\ps
+%\textbf{Attestation sans signature. Aucune autre attestation spécifique n'est délivrée, à des usages particuliers tels que les banques, logements, autres allocations, etc. Photocopies valables.}
+\end{document}

@@ -1,0 +1,206 @@
+\ProvidesPackage{charteunil}
+
+% Copyright (c) 2020 Perceval Faramaz.
+
+\usepackage{hyperref}
+
+% UNIL
+\usepackage{fontspec}%déjà chargé par luatextra
+\usepackage{picture,eso-pic}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+\defaultfontfeatures{Ligatures=TeX} % to have the automatics ligatures of TeX
+\linespread{1.5}
+\setromanfont{Verdana}
+\definecolor{black}{gray}{0} %100% black
+\definecolor{black-sixtyp}{gray}{0.40} %60% black
+\definecolor{black-fiftyfivep}{gray}{0.45} %55% black
+\newfontfeature{PantoneBlue}{color=008AB4} %Pantone Process Blue C / CMYK(100,10,0,10)
+
+\newcommand{\@logopath}{includes/unilogo_nb.pdf}
+\newcommand{\@expediteurcouleur}{black}
+\newif\iflogocouleur
+\DeclareOption{logocouleur}{
+  \renewcommand{\@logopath}{includes/unilogo_couleur.pdf}
+  \renewcommand{\@expediteurcouleur}{008AB4}
+  \logocouleurtrue
+}
+
+\newif\ifdeclinerlogo
+\declinerlogofalse
+\DeclareOption{declinerlogo}{
+  \declinerlogotrue
+}
+
+\newif\ifdeclinerlogopartout
+\declinerlogopartoutfalse
+\DeclareOption{declinerlogopartout}{
+  \declinerlogopartouttrue
+  \declinerlogotrue
+}
+
+\newif\ifsigmarklast
+\sigmarklastfalse
+\DeclareOption{watermarklast}{
+  \sigmarklasttrue
+}
+
+\newif\ifsigmarkfirst
+\sigmarkfirstfalse
+\DeclareOption{watermarkfirst}{
+  \sigmarkfirsttrue
+}
+
+\newif\ifsigmarkall
+\sigmarkallfalse
+\DeclareOption{watermarkall}{
+  \sigmarkalltrue
+}
+
+\newcommand{\@leftmargin}{28mm}
+\newcommand{\@unilogoxdelta}{0mm}
+\DeclareOption{fullwidth}{
+  \renewcommand{\@leftmargin}{15mm}
+  \renewcommand{\@unilogoxdelta}{-3.15mm}
+}
+
+\ProcessOptions\relax
+
+\newtoks\maxidentitylength
+\maxidentitylength{5.5cm}
+
+\newtoks\fromdept
+\newtoks\superdept
+\newtoks\contactline
+\superdept{\vspace{\baselineskip}}
+
+\newfontfamily\frutiger[
+ Path=includes/FrutigerLTStd/,
+ Extension = .otf,
+ UprightFont= *-Roman,
+ BoldFont=*-Bold, 
+ ItalicFont=*-Italic,
+ BoldItalicFont=*-BoldItalic,
+ FontFace = {l}{n}{*-Light}
+ ]{FrutigerLTStd}
+ 
+\DeclareRobustCommand{\ltseries}{\fontseries{l}\selectfont}
+\DeclareTextFontCommand{\textlt}{\ltseries}
+
+\newcommand*{\textlight}[1]{\ltseries \frutiger #1 \par}
+\newcommand*{\textal}[1]{{\fontsize{8pt}{8pt}\selectfont\textlight{#1}}}
+\newcommand*{\textdeclinaison}[1]{{\fontsize{12pt}{11pt}\selectfont \textlight{\addfontfeature{LetterSpace=0.48,Color=\@expediteurcouleur}#1}}}
+\newcommand*{\textsuperdept}[1]{{\color{black-sixtyp} \fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
+\newcommand*{\textsubdept}[1]{{\fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
+\newcommand*{\textfootersep}[1]{{\color{black-fiftyfivep} \fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
+\newcommand*{\textcontact}[1]{{\ltseries \fontsize{8pt}{9.5pt}\selectfont \frutiger #1 \par}}
+\newcommand*{\textsubjectstyle}[1]{{\fontsize{11pt}{10pt}\selectfont \textbf{#1} \par}}
+
+\newcommand\footersep{\leavevmode\xleaders\hbox{| }\hfill\kern0pt}
+
+\usepackage{accsupp}
+\DeclareRobustCommand\squelch[1]{%
+    \BeginAccSupp{method=plain,ActualText={}}#1\EndAccSupp{}}
+
+\usepackage[a4paper,bindingoffset=0in,%
+            left=\@leftmargin,right=15mm,top=11mm,bottom=24mm,
+            headheight=1cm, % as per the warning by fancyhdr
+            includehead,includefoot,
+            %heightrounded, % to avoid spurious underfull messages
+            footskip=7mm]{geometry}
+
+\usepackage[absolute,overlay]{textpos}
+\usepackage[onehalfspacing]{setspace}   % interligne à 1,5
+%\usepackage[a4paper]{geometry}          % papier A4
+\usepackage{graphicx}					% utilisation des images
+\usepackage{wrapfig}					% conteneurs d'image
+\usepackage{fancyhdr}					% style de page
+
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{
+\fancyhf{} % sets both header and footer to nothing
+
+%\fancyfoot[C]{\includegraphics[
+%  width=180mm,
+%  keepaspectratio,
+%]{SLA/SASMEsig.png}}
+
+\fancyfoot[C]{\begin{minipage}[t]{\textwidth}\noindent
+\textsuperdept{\the\superdept}\textsubdept{\the\fromdept}\textfootersep{\squelch\footersep}\vspace{10pt}\textcontact{\the\contactline}
+\end{minipage}}
+}
+\pagestyle{plain}
+
+\AddToShipoutPictureBG{%
+ \AtPageUpperLeft{
+  \put(18.15mm+\@unilogoxdelta,-11mm){\makebox(0,0)[tl]{\includegraphics[
+  width=4.1cm,
+  keepaspectratio,
+]{\@logopath}}}
+  \put(16.5mm,-10.5mm){\makebox(25mm,-12mm)[tl]{
+  \special{pdf:literal direct 0 w 3 Tr} % .4 here is the stroke width
+  \textal{\addfontfeature{LetterSpace=9.0} UNIL | Université de Lausanne}
+  \special{pdf:literal direct 0 w 0 Tr} % .4 here is the stroke width
+  }}}}
+
+\newcommand{\deptheadingcommand}{\AddToShipoutPictureBG*}
+\ifdeclinerlogopartout
+\renewcommand{\deptheadingcommand}{\AddToShipoutPictureBG}
+\fi
+\deptheadingcommand{%
+  \color{black}
+  \AtPageUpperLeft{
+    \ifdeclinerlogo
+      \put(27.7mm+\@unilogoxdelta,-30mm){\begin{minipage}[t]{\the\maxidentitylength}\noindent\raggedright
+      \textdeclinaison{\the\fromdept}
+      \end{minipage}}
+    \else
+      \put(27.7mm+\@unilogoxdelta,-28.2mm){\begin{minipage}[t]{10cm}\noindent
+      \textal{\@fromaddress}
+      \end{minipage}}
+    \fi
+}}
+
+
+\newcommand*{\sigmarkplacementcommand}[1]{}
+
+\ifsigmarklast
+\renewcommand*{\sigmarkplacementcommand}[1]{\AtEndDocument{\AddToShipoutPictureBG*{#1}}}
+\fi
+
+\ifsigmarkfirst
+\renewcommand*{\sigmarkplacementcommand}[1]{\AddToShipoutPictureBG*{#1}}
+\fi
+
+\ifsigmarkall
+\renewcommand*{\sigmarkplacementcommand}[1]{\AddToShipoutPictureBG{#1}}
+\fi
+
+\sigmarkplacementcommand{
+\AtPageLowerLeft{% or \AtTextCenter
+  \put(140mm,32mm){\makebox(0,0)[bl]{\rotatebox[origin=c]{90}{\includegraphics[
+  width=190mm,
+  keepaspectratio,
+  ]{includes/signature.pdf}}}}}
+}
+
+%\makeatletter
+\let\ps@empty\ps@plain
+\let\ps@firstpage\ps@plain
+\let\@texttop\relax
+
+\newcommand\toaddress[1]{\def\@toaddress{#1}}
+\renewcommand\fromaddress[1]{\def\@fromaddress{#1}}
+
+\newcommand\subject[1]{\thispagestyle{empty}%
+    {\begin{textblock*}{5cm}(12.5cm,4.25cm)\ignorespaces  %% earlier it was \begin{tabular}{l@{}}
+      \@toaddress
+      \end{textblock*}
+      \begin{textblock*}{5cm}(12.5cm,9.1cm)\ignorespaces  %% earlier it was \begin{tabular}{l@{}}
+      \@date \end{textblock*}}%
+  %\vspace{1\parskip}%
+  \vspace*{\dimexpr(\pagegoal-\pagetotal-.25in-4cm-112mm+7mm)}\textsubjectstyle{#1} \par\nobreak}
+  
+\renewcommand\signature[1]{\vspace*{\parskip}\begin{flushright}#1\end{flushright}\vspace{-\parskip}}
+
+%.
