@@ -82,11 +82,26 @@
 \newcommand{\executeWatermarkAll}{
   \sigmarkalltrue
 }
+%NO watermark
+\newcommand{\executeWatermarkNone}{
+  \sigmarkallfalse
+  \sigmarkfirstfalse
+  \sigmarklastfalse
+}
 
 %Leave room for sender signature
 \newcommand{\@signatureroom}{0mm}
 \newcommand{\executeSignatureRoom}{
   \renewcommand{\@signatureroom}{8mm}
+}
+
+\newcommand{\subjectfontsize}{\fontsize{11pt}{10pt}}
+\newcommand{\@shortDateOffset}{0mm}
+\newcommand{\@bodyParskip}{\parskip}
+\newcommand{\largesubjectfont}{
+  \renewcommand{\subjectfontsize}{\fontsize{14pt}{12pt}}
+  \renewcommand{\@shortDateOffset}{-1.5cm}
+  \renewcommand{\@bodyParskip}{3\parskip}
 }
 
 %Font setup for Futura
@@ -106,12 +121,13 @@
 }
 \newcommand{\setfont}{
 \iffutura
-\linespread{1.3}
+\linespread{1.0}
 \else
 \setromanfont{Verdana}
 \linespread{1.4}
 \fi
 \selectfont
+\setlength{\parskip}{\@bodyParskip}
 }
 
 \newif\ifshowmarks
@@ -128,7 +144,7 @@
   \ifthenelse{\equal{#1}{externe-strict-demo}} %Couleur, étroit, watermark all
     {\executeLogoCouleur \executeWatermarkAll \showmarkstrue}{}
   \ifthenelse{\equal{#1}{attestation}} %Couleur, étroit
-    {\executeFullwidth \executeFullFutura \executeWatermarkAll}{}
+    {\executeFullwidth \executeFullFutura \executeWatermarkAll \largesubjectfont}{}
 }
 
 \ExecuteOptionsX{preset=none}% Preset keys, 'section' being the default here
@@ -141,6 +157,7 @@
 \DeclareOptionX{watermarklast}{\executeWatermarkLast}
 \DeclareOptionX{watermarkfirst}{\executeWatermarkFirst}
 \DeclareOptionX{watermarkall}{\executeWatermarkAll}
+\DeclareOptionX{watermarknone}{\executeWatermarkNone}
 \DeclareOptionX{fullwidth}{\executeFullwidth}
 \DeclareOptionX{signatureRoom}{\executeSignatureRoom}
 
@@ -158,13 +175,13 @@
 \DeclareTextFontCommand{\textlt}{\ltseries}
 
 \newcommand*{\textlight}[1]{\ltseries \frutiger #1 \par}
-\newcommand*{\textal}[1]{{\fontsize{8pt}{8pt}\selectfont\textlight{#1}}}
+\newcommand*{\textal}[1]{{\linespread{1.3}\fontsize{8pt}{8pt}\selectfont\textlight{#1}}}
 \newcommand*{\textdeclinaison}[1]{{\fontsize{12pt}{11pt}\selectfont \textlight{\addfontfeature{LetterSpace=0.48,Color=\@expediteurcouleur}#1}}}
 \newcommand*{\textsuperdept}[1]{{\color{black-sixtyp} \fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
 \newcommand*{\textsubdept}[1]{{\fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
 \newcommand*{\textfootersep}[1]{{\color{black-fiftyfivep} \fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
 \newcommand*{\textcontact}[1]{{\ltseries \fontsize{8pt}{9.5pt}\selectfont \frutiger #1 \par}}
-\newcommand*{\textsubjectstyle}[1]{{\fontsize{11pt}{10pt}\selectfont \textbf{#1} \par}}
+\newcommand*{\textsubjectstyle}[1]{{\subjectfontsize\selectfont \textbf{#1} \par}}
 
 \newcommand\footersep{\leavevmode\xleaders\hbox{| }\hfill\kern0pt}
 
@@ -181,7 +198,6 @@
 
 \usepackage[absolute,overlay]{textpos}
 \usepackage[onehalfspacing]{setspace}   % interligne à 1,5
-%\usepackage[a4paper]{geometry}          % papier A4
 \usepackage{graphicx}					% utilisation des images
 \usepackage{wrapfig}					% conteneurs d'image
 \usepackage{fancyhdr}					% style de page
@@ -262,16 +278,18 @@
 \newcommand\toaddress[1]{\def\@toaddress{#1}}
 \renewcommand\fromaddress[1]{\def\@fromaddress{#1}}
 
+\newcommand{\dateYpos}{\dimexpr(9.1cm+\@shortDateOffset)}
 \newcommand\subject[1]{\thispagestyle{empty}%
     {\begin{textblock*}{5cm}(12.5cm,4.25cm)\ignorespaces  %% earlier it was \begin{tabular}{l@{}}
       \iffutura\linespread{1.1}\selectfont\fi\@toaddress
       \end{textblock*}
-      \begin{textblock*}{5cm}(12.5cm,9.1cm)\ignorespaces  %% earlier it was \begin{tabular}{l@{}}
+      \begin{textblock*}{5cm}(12.5cm,\dateYpos)\ignorespaces  %% earlier it was \begin{tabular}{l@{}}
       \@date \end{textblock*}}%
-  %\vspace{1\parskip}%
-  \vspace*{\dimexpr(\pagegoal-\pagetotal-4.5cm-112mm)}\textsubjectstyle{#1} \par\nobreak\setfont}
+      \vspace*{\dimexpr(\pagegoal-\pagetotal-4.5cm-112mm+\@shortDateOffset)}\textsubjectstyle{#1}\setfont}
   
-\renewcommand\signature[1]{\vspace*{\dimexpr(\parskip+\@signatureroom)}\begin{flushright}#1\end{flushright}\vspace{-\parskip}}
+\renewcommand\signature[1]{\vspace*{\dimexpr(\parskip+\@signatureroom)}\begin{flushright}#1\end{flushright}
+%\vspace{-\parskip}
+}
 
 % Following is for demonstration only
 \ifshowmarks
