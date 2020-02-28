@@ -9,70 +9,17 @@
 \usepackage{picture,eso-pic}
 \usepackage{xcolor}
 \usepackage[T1]{fontenc}
+\usepackage{ifthen}
+\RequirePackage{xkeyval}
+
 \defaultfontfeatures{Ligatures=TeX} % to have the automatics ligatures of TeX
 \linespread{1.5}
 \setromanfont{Verdana}
+\selectfont
 \definecolor{black}{gray}{0} %100% black
 \definecolor{black-sixtyp}{gray}{0.40} %60% black
 \definecolor{black-fiftyfivep}{gray}{0.45} %55% black
 \newfontfeature{PantoneBlue}{color=008AB4} %Pantone Process Blue C / CMYK(100,10,0,10)
-
-\newcommand{\@logopath}{includes/unilogo_nb.pdf}
-\newcommand{\@expediteurcouleur}{black}
-\newif\iflogocouleur
-\DeclareOption{logocouleur}{
-  \renewcommand{\@logopath}{includes/unilogo_couleur.pdf}
-  \renewcommand{\@expediteurcouleur}{008AB4}
-  \logocouleurtrue
-}
-
-\newif\ifdeclinerlogo
-\declinerlogofalse
-\DeclareOption{declinerlogo}{
-  \declinerlogotrue
-}
-
-\newif\ifdeclinerlogopartout
-\declinerlogopartoutfalse
-\DeclareOption{declinerlogopartout}{
-  \declinerlogopartouttrue
-  \declinerlogotrue
-}
-
-\newif\ifsigmarklast
-\sigmarklastfalse
-\DeclareOption{watermarklast}{
-  \sigmarklasttrue
-}
-
-\newif\ifsigmarkfirst
-\sigmarkfirstfalse
-\DeclareOption{watermarkfirst}{
-  \sigmarkfirsttrue
-}
-
-\newif\ifsigmarkall
-\sigmarkallfalse
-\DeclareOption{watermarkall}{
-  \sigmarkalltrue
-}
-
-\newcommand{\@leftmargin}{28mm}
-\newcommand{\@unilogoxdelta}{0mm}
-\DeclareOption{fullwidth}{
-  \renewcommand{\@leftmargin}{15mm}
-  \renewcommand{\@unilogoxdelta}{-3.15mm}
-}
-
-\ProcessOptions\relax
-
-\newtoks\maxidentitylength
-\maxidentitylength{5.5cm}
-
-\newtoks\fromdept
-\newtoks\superdept
-\newtoks\contactline
-\superdept{\vspace{\baselineskip}}
 
 \newfontfamily\frutiger[
  Path=includes/FrutigerLTStd/,
@@ -83,6 +30,129 @@
  BoldItalicFont=*-BoldItalic,
  FontFace = {l}{n}{*-Light}
  ]{FrutigerLTStd}
+
+% Logo Couleur
+\newcommand{\@logopath}{includes/unilogo_nb.pdf}
+\newcommand{\@expediteurcouleur}{black}
+\newif\iflogocouleur
+\newcommand{\executeLogoCouleur}{
+  \renewcommand{\@logopath}{includes/unilogo_couleur.pdf}
+  \renewcommand{\@expediteurcouleur}{008AB4}
+  \logocouleurtrue
+}
+
+% Full Width
+\newcommand{\@leftmargin}{28mm}
+\newcommand{\@unilogoxdelta}{0mm}
+\newcommand{\executeFullwidth}{
+  \renewcommand{\@leftmargin}{15mm}
+  \renewcommand{\@unilogoxdelta}{-3.15mm}
+}
+
+% Decliner logo
+\newif\ifdeclinerlogo
+\declinerlogofalse
+\newcommand{\executeDeclinerLogo}{
+  \declinerlogotrue
+}
+
+% Decliner partout
+\newif\ifdeclinerlogopartout
+\declinerlogopartoutfalse
+\newcommand{\executeDeclinerLogoPartout}{
+  \declinerlogopartouttrue
+  \declinerlogotrue
+}
+
+% Watermark last
+\newif\ifsigmarklast
+\sigmarklastfalse
+\newcommand{\executeWatermarkLast}{
+  \sigmarklasttrue
+}
+% Watermark first
+\newif\ifsigmarkfirst
+\sigmarkfirstfalse
+\newcommand{\executeWatermarkFirst}{
+  \sigmarkfirsttrue
+}
+%Watermark all
+\newif\ifsigmarkall
+\sigmarkallfalse
+\newcommand{\executeWatermarkAll}{
+  \sigmarkalltrue
+}
+
+%Leave room for sender signature
+\newcommand{\@signatureroom}{0mm}
+\newcommand{\executeSignatureRoom}{
+  \renewcommand{\@signatureroom}{8mm}
+}
+
+%Font setup for Futura
+\newif\iffutura
+\futurafalse
+\newcommand{\executeFullFutura}{
+\setromanfont[
+ Path=includes/FrutigerLTStd/,
+ Extension = .otf,
+ UprightFont= *-Light,
+ BoldFont=*-Bold, 
+ ItalicFont=*-Italic,
+ BoldItalicFont=*-BoldItalic,
+ FontFace = {l}{n}{*-Light}
+ ]{FrutigerLTStd}
+ \futuratrue
+}
+\newcommand{\setfont}{
+\iffutura
+\linespread{1.3}
+\else
+\setromanfont{Verdana}
+\linespread{1.4}
+\fi
+\selectfont
+}
+
+\newif\ifshowmarks
+\showmarksfalse
+
+% Presets
+\DeclareOptionX{preset}{
+  \ifthenelse{\equal{#1}{interne}} %NB, large
+    {\executeFullwidth}{}
+  \ifthenelse{\equal{#1}{externe}} %Couleur, large
+    {\executeFullwidth \executeLogoCouleur}{}
+  \ifthenelse{\equal{#1}{externe-strict}} %Couleur, étroit, watermark all
+    {\executeLogoCouleur \executeWatermarkAll}{}
+  \ifthenelse{\equal{#1}{externe-strict-demo}} %Couleur, étroit, watermark all
+    {\executeLogoCouleur \executeWatermarkAll \showmarkstrue}{}
+  \ifthenelse{\equal{#1}{attestation}} %Couleur, étroit
+    {\executeFullwidth \executeFullFutura \executeWatermarkAll}{}
+}
+
+\ExecuteOptionsX{preset=none}% Preset keys, 'section' being the default here
+
+
+%%% Standard options
+\DeclareOptionX{logocouleur}{\executeLogoCouleur}
+\DeclareOptionX{declinerlogo}{\executeDeclinerLogo}
+\DeclareOptionX{declinerlogopartout}{\executeDeclinerLogoPartout}
+\DeclareOptionX{watermarklast}{\executeWatermarkLast}
+\DeclareOptionX{watermarkfirst}{\executeWatermarkFirst}
+\DeclareOptionX{watermarkall}{\executeWatermarkAll}
+\DeclareOptionX{fullwidth}{\executeFullwidth}
+\DeclareOptionX{signatureRoom}{\executeSignatureRoom}
+
+\ProcessOptionsX\relax
+
+\newtoks\maxidentitylength
+\maxidentitylength{5.5cm}
+
+\newtoks\fromdept
+\newtoks\superdept
+\newtoks\contactline
+\superdept{\vspace{\baselineskip}}
  
 \DeclareRobustCommand{\ltseries}{\fontseries{l}\selectfont}
 \DeclareTextFontCommand{\textlt}{\ltseries}
@@ -194,13 +264,77 @@
 
 \newcommand\subject[1]{\thispagestyle{empty}%
     {\begin{textblock*}{5cm}(12.5cm,4.25cm)\ignorespaces  %% earlier it was \begin{tabular}{l@{}}
-      \@toaddress
+      \iffutura\linespread{1.1}\selectfont\fi\@toaddress
       \end{textblock*}
       \begin{textblock*}{5cm}(12.5cm,9.1cm)\ignorespaces  %% earlier it was \begin{tabular}{l@{}}
       \@date \end{textblock*}}%
   %\vspace{1\parskip}%
-  \vspace*{\dimexpr(\pagegoal-\pagetotal-.25in-4cm-112mm+7mm)}\textsubjectstyle{#1} \par\nobreak}
+  \vspace*{\dimexpr(\pagegoal-\pagetotal-4.5cm-112mm)}\textsubjectstyle{#1} \par\nobreak\setfont}
   
-\renewcommand\signature[1]{\vspace*{\parskip}\begin{flushright}#1\end{flushright}\vspace{-\parskip}}
+\renewcommand\signature[1]{\vspace*{\dimexpr(\parskip+\@signatureroom)}\begin{flushright}#1\end{flushright}\vspace{-\parskip}}
+
+% Following is for demonstration only
+\ifshowmarks
+\AddToShipoutPicture*{%
+  \color{gray}%
+  \AtPageUpperLeft{%
+    \put(18mm,-11mm){\vector(1,0){4cm}}%
+    \put(58mm,-11mm){\vector(-1,0){4cm}}%
+    \put(18mm,-11mm){\makebox(4cm,\baselineskip)[c]{4cm}}%
+
+    \put(18mm,-11mm){\line(0,-1){14mm}}%
+    \put(0,-.07\paperheight){\vector(1,0){18mm}}%
+    \put(18mm,-.07\paperheight){\vector(-1,0){18mm}}%
+    \put(0,-.07\paperheight){\makebox(18mm,\baselineskip)[c]{18mm}}%
+    
+    \multiput(28mm,0)(0,-.01\paperheight){100}{\line(0,-1){.005\paperheight}}%
+    \put(0,-.5\paperheight){\vector(1,0){28mm}}%
+    \put(28mm,-.5\paperheight){\vector(-1,0){28mm}}%
+    \put(0,-.5\paperheight){\makebox(28mm,\baselineskip)[c]{28mm}}%
+    
+    \multiput(0,-11mm)(.01\paperwidth,0){100}{\line(1,0){.005\paperwidth}}%
+    \put(.5\paperwidth,0){\vector(0,-1){11mm}}%
+    \put(.5\paperwidth,-11mm){\vector(0,1){11mm}}%
+    \put(.5\paperwidth,-11mm){\makebox(0,11mm)[l]{ 11mm}}%
+    
+    %address at x=12.5cm
+    \put(124mm,-42.5mm){\line(0,-1){20mm}}%
+    \put(0,-52.5mm){\vector(1,0){124mm}}%
+    \put(124mm,-52.5mm){\vector(-1,0){124mm}}%
+    \put(0,-52.5mm){\makebox(124mm,\baselineskip)[c]{12,5cm}}%
+    
+    %address at y=42.5cm
+    \put(125mm,-41.5mm){\line(1,0){45mm}}%
+    \put(150mm,0){\vector(0,-1){41.5mm}}%
+    \put(150mm,-41.5mm){\vector(0,1){41.5mm}}%
+    \put(150mm,-41.5mm){\makebox(0,41.5mm)[l]{ 4,25cm}}%
+    
+    %date at y=91mm
+    \put(125mm,-90mm){\line(1,0){60mm}}%
+    \put(180mm,0){\vector(0,-1){90mm}}%
+    \put(180mm,-90mm){\vector(0,1){90mm}}%
+    \put(180mm,-90mm){\makebox(0,90mm)[l]{ 9,1cm}}%
+    
+    %subject at y=112mm
+    \put(28mm,-112mm){\line(1,0){60mm}}%
+    \put(45mm,0){\vector(0,-1){112mm}}%
+    \put(45mm,-112mm){\vector(0,1){112mm}}%
+    \put(45mm,-112mm){\makebox(0,80mm)[l]{ 112mm}}%
+    
+    \put(\paperwidth,0){%
+      \multiput(-15mm,0)(0,-.01\paperheight){100}{\line(0,-1){.005\paperheight}}%
+      \put(-15mm,-.333\paperheight){\vector(1,0){15mm}}%
+      \put(0,-.333\paperheight){\vector(-1,0){15mm}}%
+      \put(-15mm,-.333\paperheight){\makebox(15mm,\baselineskip)[c]{15mm}}%
+    }%
+  }%
+  \AtPageLowerLeft{%
+    \multiput(0,10mm)(.01\paperwidth,0){100}{\line(1,0){.005\paperwidth}}%
+    \put(.5\paperwidth,0){\vector(0,1){10mm}}%
+    \put(.5\paperwidth,10mm){\vector(0,-1){10mm}}%
+    \put(.5\paperwidth,0){\makebox(0,10mm)[l]{ 10mm}}%
+  }%
+}
+\fi
 
 %.
