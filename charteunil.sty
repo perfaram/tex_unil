@@ -59,13 +59,18 @@
   \logocouleurfalse
 }
 
-% Full Width
+% Largeur de page
 \newcommand{\@leftmargin}{28mm}
 \newcommand{\@unilogoxdelta}{0mm}
+\newcommand{\executeNarrow}{
+  \renewcommand{\@leftmargin}{28mm}
+  \renewcommand{\@unilogoxdelta}{0mm}
+}
 \newcommand{\executeFullwidth}{
   \renewcommand{\@leftmargin}{15mm}
   \renewcommand{\@unilogoxdelta}{-3.15mm}
 }
+\executeNarrow
 
 % Déclinaisons du logo (ajout du nom d'unité en-dessous)
 \newif\ifdeclinerlogo
@@ -76,6 +81,7 @@
 }
 \newcommand{\executeDeclinerLogoPremiere}{
   \declinerlogotrue
+  \declinerlogopartoutfalse
 }
 \newcommand{\executeDeclinerLogoPartout}{
   \declinerlogopartouttrue
@@ -186,12 +192,18 @@
     {\executeDeclinerLogoPartout}{}
 }
 
+\DeclareOptionX{largeurpage}{
+  \ifthenelse{\equal{#1}{etroit}} %page étroite (corps aligné sur U du logo)
+    {\executeNarrow}{}
+  \ifthenelse{\equal{#1}{large}} %page large
+    {\executeFullwidth}{}
+}
+
 %%% Standard options
 \DeclareOptionX{watermarklast}{\executeWatermarkLast}
 \DeclareOptionX{watermarkfirst}{\executeWatermarkFirst}
 \DeclareOptionX{watermarkall}{\executeWatermarkAll}
 \DeclareOptionX{watermarknone}{\executeWatermarkNone}
-\DeclareOptionX{fullwidth}{\executeFullwidth}
 \DeclareOptionX{signatureRoom}{\executeSignatureRoom}
 
 \ProcessOptionsX\relax
