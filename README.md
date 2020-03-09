@@ -12,7 +12,7 @@ Cf. les exemples pour plus d'infos. Ce package simplifie la création de documen
 * logo (couleur/noir/gris)
 * decliner (non/premiere/partout)
 * filigrane (non/derniere/premiere/partout)
-* pageEtroite (large/etroite)
+* largeurpage (large/etroite)
 * futura
 * espaceSignature
 
