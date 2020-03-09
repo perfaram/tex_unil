@@ -41,12 +41,22 @@
 
 % Logo Couleur
 \newcommand{\@logopath}{includes/unilogo_nb.pdf}
-\newcommand{\@expediteurcouleur}{black}
+\newcommand{\@unitecouleur}{black}
 \newif\iflogocouleur
 \newcommand{\executeLogoCouleur}{
   \renewcommand{\@logopath}{includes/unilogo_couleur.pdf}
-  \renewcommand{\@expediteurcouleur}{008AB4}
+  \renewcommand{\@unitecouleur}{008AB4}
   \logocouleurtrue
+}
+\newcommand{\executeLogoNoir}{
+  \renewcommand{\@logopath}{includes/unilogo_nb.pdf}
+  \renewcommand{\@unitecouleur}{black}
+  \logocouleurfalse
+}
+\newcommand{\executeLogoGris}{
+  \renewcommand{\@logopath}{includes/unilogo_gris.pdf}
+  \renewcommand{\@unitecouleur}{black}
+  \logocouleurfalse
 }
 
 % Full Width
@@ -57,20 +67,21 @@
   \renewcommand{\@unilogoxdelta}{-3.15mm}
 }
 
-% Decliner logo
+% Déclinaisons du logo (ajout du nom d'unité en-dessous)
 \newif\ifdeclinerlogo
-\declinerlogofalse
-\newcommand{\executeDeclinerLogo}{
+\newif\ifdeclinerlogopartout
+\newcommand{\executeDeclinerLogoAucun}{
+  \declinerlogofalse
+  \declinerlogopartoutfalse
+}
+\newcommand{\executeDeclinerLogoPremiere}{
   \declinerlogotrue
 }
-
-% Decliner partout
-\newif\ifdeclinerlogopartout
-\declinerlogopartoutfalse
 \newcommand{\executeDeclinerLogoPartout}{
   \declinerlogopartouttrue
   \declinerlogotrue
 }
+\executeDeclinerLogoAucun
 
 % Watermark last
 \newif\ifsigmarklast
@@ -148,20 +159,34 @@
   \ifthenelse{\equal{#1}{externe}} %Couleur, large
     {\executeFullwidth \executeLogoCouleur}{}
   \ifthenelse{\equal{#1}{externe-strict}} %Couleur, étroit, watermark all
-    {\executeLogoCouleur \executeWatermarkAll}{}
+    {\executeLogoCouleur \executeWatermarkFirst}{}
   \ifthenelse{\equal{#1}{externe-strict-demo}} %Couleur, étroit, watermark all
-    {\executeLogoCouleur \executeWatermarkAll \showmarkstrue}{}
+    {\executeLogoCouleur \executeWatermarkFirst \showmarkstrue}{}
   \ifthenelse{\equal{#1}{attestation}} %Couleur, étroit
     {\executeFullwidth \executeFullFutura \executeWatermarkAll \largesubjectfont}{}
 }
 
 \ExecuteOptionsX{preset=none}% Preset keys, 'section' being the default here
 
+\DeclareOptionX{logo}{
+  \ifthenelse{\equal{#1}{noir}} %logo noir 100%
+    {\executeLogoNoir}{}
+  \ifthenelse{\equal{#1}{gris}} %calligraphie Unil en noir 80%
+    {\executeLogoGris}{}
+  \ifthenelse{\equal{#1}{couleur}} %calligraphie Unil en Process Blue C
+    {\executeLogoCouleur}{}
+}
+
+\DeclareOptionX{decliner}{
+  \ifthenelse{\equal{#1}{non}} %adresse expéditeur en-dessous du logo (première)
+    {\executeDeclinerLogoAucun}{}
+  \ifthenelse{\equal{#1}{premiere}} %nom de l'unité en-dessous du logo (première)
+    {\executeDeclinerLogoPremiere}{}
+  \ifthenelse{\equal{#1}{partout}} %nom de l'unité en-dessous du logo (partout)
+    {\executeDeclinerLogoPartout}{}
+}
 
 %%% Standard options
-\DeclareOptionX{logocouleur}{\executeLogoCouleur}
-\DeclareOptionX{declinerlogo}{\executeDeclinerLogo}
-\DeclareOptionX{declinerlogopartout}{\executeDeclinerLogoPartout}
 \DeclareOptionX{watermarklast}{\executeWatermarkLast}
 \DeclareOptionX{watermarkfirst}{\executeWatermarkFirst}
 \DeclareOptionX{watermarkall}{\executeWatermarkAll}
@@ -184,7 +209,7 @@
 
 \newcommand*{\textlight}[1]{\ltseries \frutiger #1 \par}
 \newcommand*{\textal}[1]{{\linespread{1.3}\fontsize{8.3pt}{7.5pt}\selectfont\textlight{#1}}}
-\newcommand*{\textdeclinaison}[1]{{\fontsize{12pt}{11pt}\selectfont \textlight{\addfontfeature{LetterSpace=0.48,Color=\@expediteurcouleur}#1}}}
+\newcommand*{\textdeclinaison}[1]{{\fontsize{12pt}{11pt}\selectfont \textlight{\addfontfeature{LetterSpace=0.48,Color=\@unitecouleur}#1}}}
 \newcommand*{\textsuperdept}[1]{{\color{black-sixtyp} \fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
 \newcommand*{\textsubdept}[1]{{\fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
 \newcommand*{\textfootersep}[1]{{\color{black-fiftyfivep} \fontsize{11pt}{13pt}\selectfont \frutiger #1 \par}}
