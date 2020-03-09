@@ -199,12 +199,20 @@
     {\executeFullwidth}{}
 }
 
+\DeclareOptionX{filigrane}{
+  \ifthenelse{\equal{#1}{non}} %aucun filigrane
+    {\executeWatermarkNone}{}
+  \ifthenelse{\equal{#1}{premiere}} %filigrane avec calligraphie UNIL sur la premiere page
+    {\executeWatermarkFirst}{}
+  \ifthenelse{\equal{#1}{derniere}} %... sur la derniere 
+    {\executeWatermarkLast}{}
+  \ifthenelse{\equal{#1}{partout}} %... sur toutes les pages
+    {\executeWatermarkAll}{}
+}
+
 %%% Standard options
-\DeclareOptionX{watermarklast}{\executeWatermarkLast}
-\DeclareOptionX{watermarkfirst}{\executeWatermarkFirst}
-\DeclareOptionX{watermarkall}{\executeWatermarkAll}
-\DeclareOptionX{watermarknone}{\executeWatermarkNone}
 \DeclareOptionX{signatureRoom}{\executeSignatureRoom}
+\DeclareOptionX{futura}{\executeFullFutura \largesubjectfont}
 
 \ProcessOptionsX\relax
 
