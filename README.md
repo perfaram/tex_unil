@@ -7,7 +7,6 @@ Cf. les exemples pour plus d'infos. Ce package simplifie la création de documen
 * externe
 * externe-strict
     * externe-strict-demo
-* attestation
 
 ### Autres options
 * logo (couleur/noir/gris)
